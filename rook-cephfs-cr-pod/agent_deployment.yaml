@@ -1,4 +1,4 @@
-aptVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cephfs-monitor-agent
@@ -6,17 +6,21 @@ metadata:
 spec:
   replicas: 1
   selector:
-  matchLabels:
-    app: cephfs
-  spec:
-    containers:
-      - name: cephfs-monitor-agnet-container
-        image: ubuntu
-        command: ['sh', '-c', 'while true; do sleep 5; done']
-        volumeMounts:
-          - name: monitor-volumes-path
-            mountPath: /mnt
-    volumes:
-      - name: monitor-volumes-path
-        persistentVolumeClaim:
-          claimName: keti-cephfs-pvc-01
+    matchLabels:
+      app.kubernetes.io/name: cephfs
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cephfs
+    spec:
+      containers:
+        - name: cephfs-monitor-agent-container
+          image: ubuntu
+          command: ['sh', '-c', 'while true; do sleep 5; done']
+          volumeMounts:
+            - name: monitor-volumes-path
+              mountPath: /mnt  # ✅ mountPath 수정
+      volumes:
+        - name: monitor-volumes-path
+          persistentVolumeClaim:
+            claimName: keti-cephfs-pvc-01
