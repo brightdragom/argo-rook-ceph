@@ -1,0 +1,22 @@
+aptVersion: app/v1
+kind: Deployment
+metadata:
+  name: cephfs-monitor-agent
+  namespace: keti-cephfs
+spec:
+  replicas: 1
+  selector:
+  matchLabels:
+    app: cephfs
+  spec:
+    containers:
+      - name: cephfs-monitor-agnet-container
+        image: ubuntu
+        command: ['sh', '-c', 'while true; do sleep 5; done']
+        volumeMounts:
+          - name: monitor-volumes-path
+            mountPath: /mnt
+    volumes:
+      - name: monitor-volumes-path
+        persistentVolumeClaim:
+          claimName: keti-cephfs-pvc-01

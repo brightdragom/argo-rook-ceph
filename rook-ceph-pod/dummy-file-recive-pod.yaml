@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dummy-file-recive-pod
+  namespace: rook-ceph-example
+  labels:
+    name: dummy-file-recive-pod
+spec:
+  containers:
+  - name: app
+    image: ubuntu
+    command: ['sh', '-c', 'while true; do sleep 5; done']
+    volumeMounts:
+      - name: local-persistent-storage
+        mountPath: /mnt
+  volumes:
+    - name: local-persistent-storage
+      persistentVolumeClaim:
+        claimName: rook-ceph-example-pvc
