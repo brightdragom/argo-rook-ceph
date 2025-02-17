@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-monitor-agent
+  namespace: keti-rbd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rbd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rbd
+    spec:
+      containers:
+        - name: rbd-monitor-agent-container
+          image: ubuntu
+          command: ['sh', '-c', 'while true; do sleep 5; done']
+          volumeMounts:
+            - name: monitor-volumes-path
+              mountPath: /mnt  # ✅ mountPath 수정
+      volumes:
+        - name: monitor-volumes-path
+          persistentVolumeClaim:
+            claimName: keti-rbd-pvc-01

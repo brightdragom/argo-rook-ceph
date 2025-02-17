@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-dummy-data-vol-01
+  namespace: keti-rbd
+  labels:
+    app: rbd
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: rbd
+  template:
+    metadata:
+      labels:
+        app: rbd
+    spec:
+      containers:
+        - name: app-01
+          image: busybox
+          command: ['sh', '-c', 'while true; do echo "[1] The local volume is mounted!" >> /mnt/dummy-data-vol-01.txt && sleep 5; done']
+          volumeMounts:
+            - name: local-persistent-storage
+              mountPath: /mnt
+      volumes:
+        - name: local-persistent-storage
+          persistentVolumeClaim:
+            claimName: keti-rbd-pvc-01

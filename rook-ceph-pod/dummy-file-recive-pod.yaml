@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: dummy-file-recive-pod
-  namespace: rook-ceph-example
+  namespace: keti-rbd
   labels:
     name: dummy-file-recive-pod
 spec:
@@ -16,4 +16,4 @@ spec:
   volumes:
     - name: local-persistent-storage
       persistentVolumeClaim:
-        claimName: rook-ceph-example-pvc
+        claimName: keti-rbd-pvc-01

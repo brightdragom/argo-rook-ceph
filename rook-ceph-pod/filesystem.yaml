@@ -8,7 +8,7 @@
 apiVersion: ceph.rook.io/v1
 kind: CephFilesystem
 metadata:
-  name: myfs
+  name: keti-rbd-filesystem
   namespace: rook-ceph # namespace:cluster
 spec:
   # The metadata pool spec. Must use replication.
@@ -26,7 +26,7 @@ spec:
       #target_size_ratio: ".5"
   # The list of data pool specs. Can use replication or erasure coding.
   dataPools:
-    - name: replicated
+    - name: keti-rbd-filesystem-replicated
       failureDomain: host
       replicated:
         size: 3
@@ -138,13 +138,13 @@ spec:
 apiVersion: ceph.rook.io/v1
 kind: CephFilesystemSubVolumeGroup
 metadata:
-  name: myfs-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
+  name: keti-rbd-filesystem-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
   namespace: rook-ceph # namespace:cluster
 spec:
   # The name of the subvolume group. If not set, the default is the name of the subvolumeGroup CR.
   name: csi
   # filesystemName is the metadata name of the CephFilesystem CR where the subvolume group will be created
-  filesystemName: myfs
+  filesystemName: keti-rbd-filesystem
   # reference https://docs.ceph.com/en/latest/cephfs/fs-volumes/#pinning-subvolumes-and-subvolume-groups
   # only one out of (export, distributed, random) can be set at a time
   # by default pinning is set with value: distributed=1
