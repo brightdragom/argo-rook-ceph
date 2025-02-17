@@ -5,9 +5,9 @@ metadata:
         namespace: keti-rbd
 spec:
         accessModes:
-                - ReadWriteMany
+                - ReadWriteOnce
         resources:
                 requests:
                         storage: 4Gi
-        storageClassName: keti-rbd-sc
+        storageClassName: keti-rbd-sc-01
         #storageClassName: keti-theia-pv-01
