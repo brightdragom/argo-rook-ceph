@@ -6,7 +6,7 @@ metadata:
   labels:
     app: dummy-data-vol-01
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: dummy-data-vol-01
@@ -36,7 +36,7 @@ metadata:
   labels:
     app: dummy-data-vol-02
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: dummy-data-vol-02
