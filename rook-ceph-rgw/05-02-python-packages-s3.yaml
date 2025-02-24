@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rook-ceph-rgw-deployment
+  namespace: keti-rgw
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rook-ceph-rgw
+  template:
+    metadata:
+      labels:
+        app: rook-ceph-rgw 
+    spec:
+      containers:
+      - name: app-container
+        image: python:3.9
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "47QDB0XBGUZ5I9H8VL8U"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "dljjLsINa9DhqN5kWCkw6u4pTECaLgqqnZIAiO7X"
+        - name: AWS_HOST
+          value: "http://rook-ceph-rgw-keti-store.rook-ceph.svc:80"
+          #value: "http://10.0.2.190:30376"
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          python -m pip install boto3;
+          python -c "import boto3; s3 = boto3.client('s3', endpoint_url='$AWS_HOST', aws_access_key_id='$AWS_ACCESS_KEY_ID', aws_secret_access_key='$AWS_SECRET_ACCESS_KEY'); print(s3.list_buckets())"

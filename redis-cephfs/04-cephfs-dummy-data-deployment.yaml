@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-data-vol-01
+  namespace: keti-redis-cephfs
+  labels:
+    app: dummy-data-vol-01
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: dummy-data-vol-01
+  template:
+    metadata:
+      labels:
+        app: dummy-data-vol-01
+    spec:
+      containers:
+        - name: app-01
+          image: busybox
+          command: ['sh', '-c', 'while true; do echo "[1] The local volume is mounted!" >> /mnt/dummy-data-vol-01.txt && sleep 5; done']
+          volumeMounts:
+            - name: local-persistent-storage
+              mountPath: /mnt
+      volumes:
+        - name: local-persistent-storage
+          persistentVolumeClaim:
+            claimName: keti-redis-cephfs-pvc-01
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dummy-data-vol-02
+  namespace: keti-redis-cephfs
+  labels:
+    app: dummy-data-vol-02
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: dummy-data-vol-02
+  template:
+    metadata:
+      labels:
+        app: dummy-data-vol-02
+    spec:
+      containers:
+        - name: app-02
+          image: busybox
+          command: ['sh', '-c', 'while true; do echo "[2] The local volume is mounted!" >> /mnt/dummy-data-vol-02.txt && sleep 5; done']
+          volumeMounts:
+            - name: local-persistent-storage
+              mountPath: /mnt
+      volumes:
+        - name: local-persistent-storage
+          persistentVolumeClaim:
+            claimName: keti-redis-cephfs-pvc-01

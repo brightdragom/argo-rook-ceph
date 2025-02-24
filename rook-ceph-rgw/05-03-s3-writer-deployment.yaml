@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-writer
+  namespace: keti-rgw
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-writer
+  template:
+    metadata:
+      labels:
+        app: s3-writer
+    spec:
+      containers:
+      - name: s3-writer-container
+        image: amazonlinux:latest
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            yum install -y aws-cli;
+            while true; do
+              echo "Ceph RGW Test File $(date)" > test-file.txt;
+              aws --endpoint-url=http://$BUCKET_HOST:$BUCKET_PORT s3 cp test-file.txt s3://$BUCKET_NAME/;
+              echo "File uploaded to S3 at $(date)";
+              sleep 30;
+            done
+        envFrom:
+        - configMapRef:
+            name: keti-rgw-bucket-claim  # OBC가 생성한 ConfigMap
+        - secretRef:
+            name: keti-rgw-bucket-claim  # OBC가 생성한 Secret
